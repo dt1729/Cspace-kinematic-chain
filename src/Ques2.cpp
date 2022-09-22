@@ -49,12 +49,11 @@ void ForwardKinematics(){
 
     Eigen::Vector4d P1, P2, P3;
     P1 = Trans1*Al1; P2 = Trans1*Trans2*Al2; P3 = Trans1*Trans2*Trans3*Al3;
-    plt::named_plot("CSpace Obstacle", std::vector<double>{0,P1(0),P2(0),P3(0)}, std::vector<double>{0,P1(1),P2(1),P3(1)},"*-b");   
+    plt::named_plot(std::vector<double>{0,P1(0),P2(0),P3(0)}, std::vector<double>{0,P1(1),P2(1),P3(1)},"*-b");   
     plt::grid(true);
     plt::legend();
     plt::xlabel("X axes");
     plt::ylabel("Y axes");
     plt::title("Arm Configuration");
 	plt::show();
-
 }
