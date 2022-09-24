@@ -3,7 +3,7 @@
 #include <cmath>
 #include <math.h>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include "matplotlibcpp.h"
 #include "Eigen/Eigen"
 #define _USE_MATH_DEFINES
@@ -18,7 +18,7 @@ struct robotCon{
 struct point{
     double x;
     double y;
-}
+};
 
 class obstacle{
     public:
@@ -32,31 +32,176 @@ class obstacle{
             }
         }
 
-        bool CheckIntersectionWObs(std::pair<double,double> pos);
+        bool CheckIntersectionWObs(point pos);
 };
 
 double angle_wrap(double angle);
 
 std::vector<double> IKTwoMemberChain(robotCon r, point p);
 
-std::vector<std::vector<point>> SamplingRobot(std::vector<point> robotPs); // Pass robot points with (0,0) inserted in the array
+std::vector<point> SamplingRobot(std::vector<point> robotPs); // Pass robot points with (0,0) inserted in the array
 
-std::vector<std::vector<double,double>> CSpacePoints(std::vector<std::vector<point>> sampledRobot, std::vector<obstacle> obstacles);
- 
+std::vector<std::vector<double>> CSpacePoints( robotCon Robot, std::vector<obstacle> obstacles);
+
+void part_A();
+void part_B();
+void part_C();
+
+// ----------------------------------------------------------------------------------------------------------------//
+int main(){
+    std::cout << "First assignment questions give output then, user can enter obstacles and robot arm lengths" << std::endl;
+    std::cout << "Part A" << std::endl;
+    part_A();
+    std::cout << "Part B" << std::endl;
+    part_B();
+    std::cout << "Part C" << std::endl;
+    part_C();
+    std::vector<obstacle> Union_obs;
+    int obs_count = 0;
+    std::cout << "Enter obstacle count" << std::endl;
+    std::cin >> obs_count;
+    int obs_c = 1;
+    while(obs_count--){
+        std::cout << "Enter total vertices for obstacle " << obs_c << std::endl;
+        int vertex_cnt = 0;
+        std::cin >> vertex_cnt;
+        std::vector<std::pair<double,double>> p0 = {};
+        int vv = 1;
+        while(vertex_cnt--){
+            std::pair<double,double> p;
+            std::cout << "Enter x and y coordinate for vertex in that order for vertex " << vv << "separated by a space "<< std::endl;
+            std::cin >> p.first >> p.second;
+            p0.push_back(p);
+            vv++;
+        }
+        p0.push_back(p0[0]);
+        obstacle obs(p0);
+        Union_obs.push_back(obs);
+        obs_c++;
+    }
+
+    robotCon r1;
+    r1.l1 = 1; r1.l2 = 1; r1.theta1 = 0; r1.theta2 = 0;
+
+    std::cout << "Enter link length in order of link1, link2 separated by a space" << std::endl;
+    std::cin >> r1.l1 >> r1.l2;
+
+    std::vector<std::vector<double>> Cspace;
+    
+
+    Cspace = CSpacePoints(r1,Union_obs);
+    plt::plot(Cspace[0], Cspace[1],"*b");   
+    plt::grid(true);
+    plt::xlabel("theta1(radians)");
+    plt::ylabel("theta2(radians)");
+    plt::title("Two link C space");
+	plt::show();
+
+
+    return 0;
+}
+
+void part_A(){
+    // Obstacle definition
+    std::vector<std::pair<double,double>> p0  = {std::pair<double,double>{0.25,0.25},std::pair<double,double>{0,0.75},std::pair<double,double>{-0.25,0.25},std::pair<double,double>{0.25,0.25}};
+
+    obstacle obs(p0);
+
+    std::vector<obstacle> Union_obstacle;
+
+    Union_obstacle.push_back(obs);
+
+    robotCon r1;
+    r1.l1 = 1; r1.l2 = 1; r1.theta1 = 0; r1.theta2 = 0;
+
+    std::vector<std::vector<double>> Cspace;
+    
+
+    Cspace = CSpacePoints(r1,Union_obstacle);
+    plt::plot(Cspace[0], Cspace[1],"*b");   
+    plt::grid(true);
+    plt::xlabel("theta1(radians)");
+    plt::ylabel("theta2(radians)");
+    plt::title("Two link C space");
+	plt::show();
+
+}
+
+void part_B(){
+        // Obstacle definition
+    std::vector<std::pair<double,double>> p1  = {std::pair<double,double>{-0.25,1.1},std::pair<double,double>{-0.25,2},std::pair<double,double>{0.25,2},std::pair<double,double>{0.25,1.1},std::pair<double,double>{-0.25,1.1}};
+    std::vector<std::pair<double,double>> p2  = {std::pair<double,double>{-2,-2},std::pair<double,double>{-2,-1.8},std::pair<double,double>{2,-1.8},std::pair<double,double>{2,-2},std::pair<double,double>{-2,-2}};
+
+    obstacle obs1(p1);
+    obstacle obs2(p2);
+
+    std::vector<obstacle> Union_obstacle;
+
+    // Union_obstacle.push_back(obs);
+    Union_obstacle.push_back(obs1);
+    Union_obstacle.push_back(obs2);
+
+    robotCon r1;
+    r1.l1 = 1; r1.l2 = 1; r1.theta1 = 0; r1.theta2 = 0;
+
+    std::vector<std::vector<double>> Cspace;
+    
+
+    Cspace = CSpacePoints(r1,Union_obstacle);
+    plt::plot(Cspace[0], Cspace[1],"*b");   
+    plt::grid(true);
+    plt::xlabel("theta1(radians)");
+    plt::ylabel("theta2(radians)");
+    plt::title("Two link C space");
+	plt::show();
+
+}
+
+void part_C(){
+    // Obstacle definition
+    std::vector<std::pair<double,double>> p1  = {std::pair<double,double>{-0.25,1.1},std::pair<double,double>{-0.25,2},std::pair<double,double>{0.25,2},std::pair<double,double>{0.25,1.1},std::pair<double,double>{-0.25,1.1}};
+    std::vector<std::pair<double,double>> p2  = {std::pair<double,double>{-2,-2},std::pair<double,double>{-2,-1.8},std::pair<double,double>{2,-1.8},std::pair<double,double>{2,-2},std::pair<double,double>{-2,-2}};
+    std::vector<std::pair<double,double>> p3  = {std::pair<double,double>{-2,-0.5},std::pair<double,double>{-2,-0.3},std::pair<double,double>{2,-0.5},std::pair<double,double>{4,1},std::pair<double,double>{-2,-0.5}};
+
+    obstacle obs1(p1);
+    obstacle obs2(p2);
+    obstacle obs3(p3);
+
+    std::vector<obstacle> Union_obstacle;
+
+    Union_obstacle.push_back(obs1);
+    Union_obstacle.push_back(obs2);
+    Union_obstacle.push_back(obs3);
+
+    robotCon r1;
+    r1.l1 = 1; r1.l2 = 1; r1.theta1 = 0; r1.theta2 = 0;
+
+    std::vector<std::vector<double>> Cspace;
+
+    Cspace = CSpacePoints(r1,Union_obstacle);
+    plt::plot(Cspace[0], Cspace[1],"*b");   
+    plt::grid(true);
+    plt::xlabel("theta1(radians)");
+    plt::ylabel("theta2(radians)");
+    plt::title("Two link C space");
+	plt::show();
+
+}
+
 // ----------------------------------------------------------------------------------------------------------------//
 
 bool obstacle::CheckIntersectionWObs(point pos){
     // Sum of angles of the point with each vertex point sums to 360 degrees if inside the obstacle
-    int n                   = this->obs_points.size();
-    float my_sum            = 0;
-    bool intersection       = false;
-    float prev_min          = INFINITY;
-    float dist_from_line    = 0;
-    int line_cnt            = 0;
+    int n                    = this->obs_points.size();
+    double my_sum            = 0;
+    bool intersection        = false;
+    double prev_min          = INFINITY;
+    double dist_from_line    = 0;
+    int line_cnt             = 0;
 
     for(int i = 0; i < this->obs_points.size(); i++){
         // my_sum = sum of all interior angles; interior angles = angle of pos.point vec  - angle of pos.next point vec
-        float ang           = std::atan2(this->obs_points[(i+1)%n].second - pos.y, this->obs_points[(i+1)%n].first - pos.x) 
+        double ang           = std::atan2(this->obs_points[(i+1)%n].second - pos.y, this->obs_points[(i+1)%n].first - pos.x) 
                             - std::atan2(this->obs_points[i].second - pos.y, this->obs_points[i].first - pos.x);
         ang                 = angle_wrap(ang);
         my_sum              += ang;
@@ -77,18 +222,18 @@ double angle_wrap(double angle){
     return angle;
 }
 
-std::vector<std::vector<point>> SamplingRobot(std::vector<point> robotPs){
-    std::vector<std::vector<point>> sampledR;
+std::vector<point> SamplingRobot(std::vector<point> robotPs){
+    std::vector<point> sampledR;
     for(int i = 1; i < robotPs.size(); i++){
-        std::vector<point> link;
         double lambda = 0.01;
         while(lambda <= 1){
+            // std::cout << "sample link " << i << std::endl;
             point temp;
             temp.x = (1-lambda)*robotPs[i-1].x + (lambda)*robotPs[i].x;
             temp.y = (1-lambda)*robotPs[i-1].y + (lambda)*robotPs[i].y;
-            link.push_back(temp);
+            sampledR.push_back(temp);
+            lambda += 0.01;
         }
-        sampledR.push_back(link);
     }
     return sampledR;
 }
@@ -96,12 +241,12 @@ std::vector<std::vector<point>> SamplingRobot(std::vector<point> robotPs){
 std::vector<point> ForwardKinematics(robotCon r1, double theta1, double theta2){
     // Generating rotation matrices
     Eigen::Matrix3d R1,R2;
-    R1(0,0) = std::cos(r1.theta1); R1(0,1) = -std::sin(r1.theta1); R1(0,2) = 0.0; 
-    R1(1,0) = std::sin(r1.theta1); R1(1,1) =  std::cos(r1.theta1); R1(1,2) = 0.0;
+    R1(0,0) = std::cos(theta1); R1(0,1) = -std::sin(theta1); R1(0,2) = 0.0; 
+    R1(1,0) = std::sin(theta1); R1(1,1) =  std::cos(theta1); R1(1,2) = 0.0;
     R1(2,0) = 0; R1(2,1) = 0; R1(2,2) = 0;
 
-    R2(0,0) = std::cos(r1.theta2); R2(0,1) = -std::sin(r1.theta2); R2(0,2) = 0.0;
-    R2(1,0) = std::sin(r1.theta2); R2(1,1) =  std::cos(r1.theta2); R2(1,2) = 0.0;
+    R2(0,0) = std::cos(theta2); R2(0,1) = -std::sin(theta2); R2(0,2) = 0.0;
+    R2(1,0) = std::sin(theta2); R2(1,1) =  std::cos(theta2); R2(1,2) = 0.0;
     R2(2,0) = 0; R2(2,1) = 0; R2(2,2) = 0;
 
     // Generating Trnslation matrices
@@ -111,7 +256,7 @@ std::vector<point> ForwardKinematics(robotCon r1, double theta1, double theta2){
 
     // Composing Rotation and Translation into a transformation matrix
     Eigen::Matrix4d Trans1,Trans2; 
-    Trans1.setIdentity();Trans2.setIdentity();Trans3.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
+    Trans1.setIdentity();Trans2.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
     Trans1.block<3,3>(0,0) = R1;Trans1.block<4,1>(0,3) = T1;
     Trans2.block<3,3>(0,0) = R2;Trans2.block<4,1>(0,3) = T2;
 
@@ -130,35 +275,44 @@ std::vector<point> ForwardKinematics(robotCon r1, double theta1, double theta2){
 std::vector<std::vector<double>> CSpacePoints(robotCon r1, std::vector<obstacle> obstacles){
 
     std::vector<std::vector<double>> ans;
-    std::unordered_map<std::vector<double>,std::vector<point>> AnglePoints_map;
-    std::unordered_map<std::vector<double>,std::vector<point>> AnglePointsMap_sampled;
+    std::vector<double> a1,a2,a3,a4;
+    std::vector<std::vector<point>> armcfg;
+    std::map<std::vector<double>,std::vector<point>> AnglePointsMap_sampled;
     
-    double delta_theta = 0.001, theta1 = 0.0, theta2 = 0.0;
+    double delta_theta = 0.05, theta1 = 0.0, theta2 = 0.0; // To get a refined Cspace lower delta theta further
 
     // Generating multiple robot configurations for multiple theta1 and theta2s;
     while(theta1 <= 2*M_PI){
+        theta2 = 0.0;
         while(theta2 <= 2*M_PI){
             std::vector<point> ArmConfig = ForwardKinematics(r1, theta1, theta2);
-            AnglePoints_map[std::vector<double>{theta1,theta2}] = ArmConfig;
+            armcfg.push_back(ArmConfig);
+            a1.push_back(theta1);
+            a2.push_back(theta2);
             theta2 += delta_theta;
         }
         theta1 += delta_theta;
     }
     // Sampling points on robot body for each configuration
-    for(auto const& x: AnglePoints_map){
-        AnglePointsMap_sampled[x.first] = SamplingRobot(x.second);
+    for(int i = 0; i < armcfg.size(); i++){
+        AnglePointsMap_sampled[std::vector<double>{a1[i],a2[i]}] = SamplingRobot(armcfg[i]);
     }
     // Checking collision of each point with each obstacle
+    int count = 0;
     for(obstacle obs:obstacles){
         for(auto const& x: AnglePointsMap_sampled){
-            for(Point p:x.second){
+            for(point p:x.second){
                 if(obs.CheckIntersectionWObs(p)){
-                    ans.push_back(std::vector<doubles>{x.first[0], x.first[1]});
+                    a3.push_back(x.first[0]);
+                    a4.push_back(x.first[1]);
                     continue;
                 }
+                count ++;
             }
         }
     }
+    ans.push_back(a3);
+    ans.push_back(a4);
 
     return ans;
 }

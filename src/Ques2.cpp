@@ -11,7 +11,6 @@ namespace plt = matplotlibcpp;
 struct robotCon{
     double l1, l2, l3;
     double theta1, theta2, theta3;
-
 };
 
 void ForwardKinematics();
