@@ -32,14 +32,15 @@ class obstacle{
             }
         }
 
+        void plot();
         bool CheckIntersectionWObs(point pos);
 };
 
 double angle_wrap(double angle);
 
-std::vector<double> IKTwoMemberChain(robotCon r, point p);
-
 std::vector<point> SamplingRobot(std::vector<point> robotPs); // Pass robot points with (0,0) inserted in the array
+
+std::vector<point> ForwardKinematics(robotCon r1, double theta1, double theta2);
 
 std::vector<std::vector<double>> CSpacePoints( robotCon Robot, std::vector<obstacle> obstacles);
 
@@ -69,16 +70,22 @@ int main(){
         int vv = 1;
         while(vertex_cnt--){
             std::pair<double,double> p;
-            std::cout << "Enter x and y coordinate for vertex in that order for vertex " << vv << "separated by a space "<< std::endl;
+            std::cout << "Enter x and y coordinate for vertex in that order for vertex " << vv << " separated by a space "<< std::endl;
             std::cin >> p.first >> p.second;
             p0.push_back(p);
             vv++;
         }
         p0.push_back(p0[0]);
         obstacle obs(p0);
+        obs.plot();
         Union_obs.push_back(obs);
         obs_c++;
     }
+
+    plt::title("Workspace");
+    plt::grid(true);
+    plt::show();
+
 
     robotCon r1;
     r1.l1 = 1; r1.l2 = 1; r1.theta1 = 0; r1.theta2 = 0;
@@ -106,6 +113,10 @@ void part_A(){
     std::vector<std::pair<double,double>> p0  = {std::pair<double,double>{0.25,0.25},std::pair<double,double>{0,0.75},std::pair<double,double>{-0.25,0.25},std::pair<double,double>{0.25,0.25}};
 
     obstacle obs(p0);
+    obs.plot();
+    plt::title("Workspace");
+    plt::grid(true);
+    plt::show();
 
     std::vector<obstacle> Union_obstacle;
 
@@ -133,7 +144,13 @@ void part_B(){
     std::vector<std::pair<double,double>> p2  = {std::pair<double,double>{-2,-2},std::pair<double,double>{-2,-1.8},std::pair<double,double>{2,-1.8},std::pair<double,double>{2,-2},std::pair<double,double>{-2,-2}};
 
     obstacle obs1(p1);
+    obs1.plot();
     obstacle obs2(p2);
+    obs2.plot();
+    plt::title("Workspace");
+    plt::grid(true);
+    plt::show();
+
 
     std::vector<obstacle> Union_obstacle;
 
@@ -161,11 +178,17 @@ void part_C(){
     // Obstacle definition
     std::vector<std::pair<double,double>> p1  = {std::pair<double,double>{-0.25,1.1},std::pair<double,double>{-0.25,2},std::pair<double,double>{0.25,2},std::pair<double,double>{0.25,1.1},std::pair<double,double>{-0.25,1.1}};
     std::vector<std::pair<double,double>> p2  = {std::pair<double,double>{-2,-2},std::pair<double,double>{-2,-1.8},std::pair<double,double>{2,-1.8},std::pair<double,double>{2,-2},std::pair<double,double>{-2,-2}};
-    std::vector<std::pair<double,double>> p3  = {std::pair<double,double>{-2,-0.5},std::pair<double,double>{-2,-0.3},std::pair<double,double>{2,-0.5},std::pair<double,double>{4,1},std::pair<double,double>{-2,-0.5}};
+    std::vector<std::pair<double,double>> p3  = {std::pair<double,double>{-2,-0.5},std::pair<double,double>{-2,-0.3},std::pair<double,double>{2,-0.3},std::pair<double,double>{2,-0.5},std::pair<double,double>{-2,-0.5}};
 
     obstacle obs1(p1);
+    obs1.plot();
     obstacle obs2(p2);
+    obs2.plot();
     obstacle obs3(p3);
+    obs3.plot();
+    plt::grid(true);
+    plt::title("Workspace");
+    plt::show();
 
     std::vector<obstacle> Union_obstacle;
 
@@ -315,4 +338,14 @@ std::vector<std::vector<double>> CSpacePoints(robotCon r1, std::vector<obstacle>
     ans.push_back(a4);
 
     return ans;
+}
+        std::vector<std::pair<double,double>> obs_points;
+
+void obstacle::plot(){
+    std::vector<double> x_vals, y_vals;
+    for(int i = 0; i < this->obs_points.size(); i++){
+        x_vals.push_back(this->obs_points[i].first);
+        y_vals.push_back(this->obs_points[i].second);
+    }
+    plt::named_plot("obstacle ",x_vals,y_vals,"*-");
 }

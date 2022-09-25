@@ -13,9 +13,9 @@ class point:
         self.y = float(y_coord)
 
 def part_b():
-    partitions = 36
+    partitions = 12
     obstacle = [point(0.0,0.0),point(1.0,2.0),point(0.0,2.0)]
-    robot = [point(2.0,2.0),point(3.0,4.0),point(2.0,4.0)]
+    robot = [point(0.0,0.0),point(1.0,2.0),point(0.0,2.0)]
     rrobot = rotatePoints(robot,partitions)
     fig = plt.figure()
     ax = plt.axes(projection='3d')
