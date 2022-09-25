@@ -83,6 +83,8 @@ int main(){
     }
 
     plt::title("Workspace");
+    plt::xlabel("X axes");
+    plt::ylabel("Y axes");
     plt::grid(true);
     plt::show();
 
@@ -115,6 +117,8 @@ void part_A(){
     obstacle obs(p0);
     obs.plot();
     plt::title("Workspace");
+    plt::xlabel("X axes");
+    plt::ylabel("Y axes");
     plt::grid(true);
     plt::show();
 
@@ -148,6 +152,8 @@ void part_B(){
     obstacle obs2(p2);
     obs2.plot();
     plt::title("Workspace");
+    plt::xlabel("X axes");
+    plt::ylabel("Y axes");
     plt::grid(true);
     plt::show();
 
@@ -188,6 +194,8 @@ void part_C(){
     obs3.plot();
     plt::grid(true);
     plt::title("Workspace");
+    plt::xlabel("X axes");
+    plt::ylabel("Y axes");
     plt::show();
 
     std::vector<obstacle> Union_obstacle;
