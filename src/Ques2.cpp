@@ -37,7 +37,7 @@ double angle_wrap(double angle);
 
 int main(){
     bool fk = false;
-    std::cout << "Do you want to do forwark kinematics? Enter 0(false)/1(true)" << std::endl;
+    std::cout << "Do you want to do forward kinematics? Enter 0(false)/1(true)" << std::endl;
     std::cin >> fk;
     if(fk){
         ForwardKinematics3link();
