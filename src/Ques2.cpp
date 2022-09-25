@@ -186,10 +186,6 @@ std::vector<double> IKTwoMemberChain(robotCon2D r, point p){ // returns two angl
     c2 = (std::pow(p.x,2) + std::pow(p.y,2) - (std::pow(r.l1,2) + std::pow(r.l2,2)))/(2*r.l1*r.l2);
     s2 = std::sqrt(1 - std::pow(c2,2)); // There will be two cases + and - sqrt(1 - c2^2) here we only consider one
     theta2 = std::atan2(s2,c2);
-
-    s1 = (p.y*(r.l1 + r.l2*c2) - (r.l2*s2*r.l1))/(std::pow(r.l1,2) + std::pow(r.l2,2) + 2*r.l1*r.l2*c2);
-    c1 = ((p.x*(r.l1 + r.l2*c2)) + (r.l2*s2*p.y))/(std::pow(r.l1,2) + std::pow(r.l2,2) + 2*r.l1*r.l2*c2);
-
     theta1 = std::atan2(p.y,p.x) - std::atan2(r.l2*s2,r.l1 + r.l2*c2);
     return  std::vector<double>{theta1, theta2};
 } 
