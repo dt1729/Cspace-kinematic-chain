@@ -208,7 +208,7 @@ std::vector<double> IKThreeMemberChain(robotCon r, point p){ // returns three an
 
 
 
-    // Generating multiple robot configurations for multiple theta1 and theta2;
+    // These loops help to find transition state;
     while(theta1 <= 2*M_PI){
         theta2 = 0.0;
         while(theta2 <= 2*M_PI){
