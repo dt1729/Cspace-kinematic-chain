@@ -190,7 +190,7 @@ std::vector<double> IKTwoMemberChain(robotCon2D r, point p){ // returns two angl
     s1 = (p.y*(r.l1 + r.l2*c2) - (r.l2*s2*r.l1))/(std::pow(r.l1,2) + std::pow(r.l2,2) + 2*r.l1*r.l2*c2);
     c1 = ((p.x*(r.l1 + r.l2*c2)) + (r.l2*s2*p.y))/(std::pow(r.l1,2) + std::pow(r.l2,2) + 2*r.l1*r.l2*c2);
 
-    theta1 = std::atan2(s1,c2);
+    theta1 = std::atan2(p.y,p.x) - std::atan2(r.l2*s2,r.l1 + r.l2*c2);
     return  std::vector<double>{theta1, theta2};
 } 
 
@@ -246,10 +246,9 @@ std::vector<double> IKThreeMemberChain(robotCon r, point p){ // returns three an
 
     std::vector<point> armIntersect; armIntersect.push_back(armcfg[armcfg.size() - 1]); armIntersect.push_back(armcfg[armcfg.size() - 2]);
     point s = CircleIntersection(r,p,armIntersect);
-
+    std::cout << s.x << " " <<  s.y << std::endl;
     std::vector<double> FirstTwoAngles;
     FirstTwoAngles = IKTwoMemberChain(rr,s);
-
 
     double thirdAngle = std::atan2(p.y - s.y, p.x - s.x) - angle_wrap(FirstTwoAngles[0] + FirstTwoAngles[1]);
     return std::vector<double>{FirstTwoAngles[0], FirstTwoAngles[1], thirdAngle};
